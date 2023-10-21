@@ -7,14 +7,14 @@ import passport from 'passport';
 import flash from 'express-flash';
 import session from 'express-session';
 import mongoose from 'mongoose';
+import { User } from './database/database.js';
+import antonPro from './database/antonPro.js';
 
 const app = express();
 const mongoURI = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@clustertest.ypjqomh.mongodb.net/vdrs?retryWrites=true&w=majority`;
-const users = [];
 
 mongoose.connect(mongoURI,{useNewUrlParser: true, useUnifiedTopology: true })
     .then((data)=>{
-        console.log(data)
         app.listen(process.env.PORT_NUMBER, ()=>console.log(`Listening on port ${process.env.PORT_NUMBER}`))
     })
     .catch(err=>console.log(err));
@@ -22,8 +22,8 @@ mongoose.connect(mongoURI,{useNewUrlParser: true, useUnifiedTopology: true })
 
 initializePassport(
     passport,
-    (username) => users.find(user => user.username === username),
-    (id) => users.find(user => user.id === id)
+    async (username) => await User.findById(username),
+    async (id) => await User.findById(id)
 );
 
 app.use(express.json());
@@ -44,21 +44,24 @@ app.use(cors({
 
 app.post('/signUp', async (req,res)=>{ 
     try{
-        let password = await bcrypt.hash(req.body.inputPassword,10);
-        let newUser = {
-            id: Date.now().toString(),
-            username: req.body.inputUsername,
+        let check = antonPro(req.body);
+        if(!check.valid){
+            res.json(check)
+            return;
+        };
+        let password = await bcrypt.hash(req.body.password,10);
+        let user = {
+            username: req.body.username,
             password: password,
-            gender: req.body.inputGender
-        }
-        users.push(newUser)
+            gender: req.body.gender
+        };
+        let newUser = new User(user)
+        newUser.save();
         req.login(newUser, (err) => {
             if (err) {
-                console.log(err);
-                res.json({loggedIn: false});
+                res.json({valid: false, message: 'Something went wrong'});
             } else {
-                console.log(req.user);
-                res.json({loggedIn: true, username: req.user.username, gender: req.user.gender });
+                res.json({valid: true, username: req.user.username, gender: req.user.gender });
             }
         });
     }catch(e){

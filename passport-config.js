@@ -21,7 +21,7 @@ export default function initalize(passport, getUserByUsername, getUserById){
     }
     passport.use(new LocalStrategy({usernameField: 'username'}, authenticateUser));
     passport.serializeUser((user, done) => {
-        return done(null, user.id);
+        return done(null, user._id);
     });
     passport.deserializeUser((id, done) => {
         return done(null, getUserById(id));
