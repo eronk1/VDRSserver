@@ -20,6 +20,8 @@ export default async function signUp(req,res){
             if (err) {
                 res.json({valid: false, message: 'Something went wrong'});
             } else {
+                req.session.user = { username: newUser.username };
+                req.session.authenticated = true;
                 res.json({valid: true, username: req.user.username, gender: req.user.gender });
             }
         });

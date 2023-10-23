@@ -14,7 +14,7 @@ export default function fornitebattlepass(input){
     if(input.username.length<3 || input.username.length>20){
         return {valid:false,field:'username',mistake:'wrongUsernameLength',message:"Your username must be between 3 and 20"}
     }
-    if(!/^[a-zA-Z]*_?[a-zA-Z]*$/.test(input.username)){
+    if(!/^[a-zA-Z0-9]*_?[a-zA-Z0-9]*$/.test(input.username)){
         return {valid:false,field:'username',mistake:'unwantedCharacter',message:"Your username must only include alphabetical letters and one underscore."}
     }
     if(input.username.startsWith('_')||input.username.endsWith('_')){
