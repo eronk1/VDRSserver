@@ -80,8 +80,8 @@ let count = 0
 let storedUsers = [];
 io.on('connection', socket => {
     count++;
-    console.log(count)
-    console.log('A user connected'+socket.id);
+    // console.log(count)
+    // console.log('A user connected'+socket.id);
     socket.on('newPlayer',message=>{
         let player = storedUsers.find(player => player.username === message.username);
         if(!player){
@@ -90,11 +90,10 @@ io.on('connection', socket => {
         }
     })
     socket.on('userUpdates', (socketId)=>{
-        console.log(storedUsers)
         io.emit('usersUpdated', storedUsers);
     })
     socket.on('positionUpdate', message =>{
-            console.log(message)
+            // console.log(message)
         let player = storedUsers.find(player => player.username === message.username);
         if(player){
             const updatedPlayer = { ...player, position: { x: message.position[0], y: message.position[1] } };
@@ -104,16 +103,15 @@ io.on('connection', socket => {
         socket.broadcast.emit('outsideUserPositionUpdate', message)
     })
     socket.on('sendMessage', message =>{
-        console.log(message)
         io.emit('recieveMessage',message)
     })
     socket.on('eating', message =>{
-        console.log(message)
+        // console.log(message)
         io.emit('eatingFood',message)
     })
     socket.on('disconnect',()=>{
         count--;
-        console.log('A user disconnected');
+        // console.log('A user disconnected');
         socket.broadcast.emit('userDisconnected', socket.id);
     })
 })

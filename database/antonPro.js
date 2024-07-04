@@ -24,8 +24,8 @@ export default function fornitebattlepass(input){
     if(!input.password){
         return {valid:false, field:'password',mistake:'noPassword',message:'Please input a password.'}
     }
-    if(input.password.length<10 || input.password.length>40){
-        return {valid:false,field:'password',mistake:'wrongPasswordLength',message:"Your password must be between 10 to 40."}
+    if(input.password.length<8 || input.password.length>40){
+        return {valid:false,field:'password',mistake:'wrongPasswordLength',message:"Your password must be between 8 to 40."}
     }
     if(!/[a-z]/.test(input.password)){
         return {valid:false,field:'password',mistake:'noLowerCaseLetter',message:"You must include at least 1 lower case letter."}

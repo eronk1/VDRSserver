@@ -5,7 +5,7 @@ const LocalStrategy = passportLocal.Strategy;
 export default async function initalize(passport, getUserByUsername, getUserById){
     const authenticateUser = async (username, password, done) => {
         const user = await getUserByUsername(username);
-        console.log(await user);
+        // console.log(await user);
         if (!user){
             return done(null, false, {message: 'Incorrect username'});
         }

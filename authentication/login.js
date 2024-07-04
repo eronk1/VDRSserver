@@ -2,7 +2,7 @@ import { User } from '../database/database.js';
 export default async function login(req,res){
     try{
         let newUser = await User.findOne({username: req.body.username});
-        console.log(newUser);
+        // console.log(newUser);
         req.login(newUser, (err) => {
             if (err) {
                 res.json({valid: false, message: 'Invalid login attempt'});
